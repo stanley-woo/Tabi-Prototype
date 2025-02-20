@@ -1,0 +1,16 @@
+# Flutter/Dart
+build/
+.dart_tool/
+.packages
+.pub/
+*.iml
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.env
+venv/
+
+# Docker
+*.log
