@@ -116,3 +116,5 @@ class ItineraryStatic(BaseModel):
     likes: int
     forks: int
     saves: int
+    photo_urls: List[str] = []
+    video_urls: List[str] = []

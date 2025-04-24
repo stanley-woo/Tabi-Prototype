@@ -8,6 +8,8 @@ class ItineraryStatic {
   final int likes;
   final int forks;
   final int saves;
+  final List<String> photoUrls;
+  final List<String> videoUrls;
 
   ItineraryStatic({
     required this.id,
@@ -18,7 +20,9 @@ class ItineraryStatic {
     required this.imageUrl,
     required this.likes,
     required this.forks,
-    required this.saves
+    required this.saves,
+    required this.photoUrls,
+    required this.videoUrls,
   });
 
   factory ItineraryStatic.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class ItineraryStatic {
       likes: json['likes'],
       forks: json['forks'],
       saves: json['saves'],
+      photoUrls: List<String>.from(json['photo_urls'] ?? []),
+      videoUrls: List<String>.from(json['video_urls'] ?? []),
     );
   }
 }

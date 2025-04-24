@@ -4,8 +4,11 @@ from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
 from model import User, Itinerary, ItineraryBlock, UserRead, UserCreate, ItineraryCreate, ItineraryRead, ItineraryBlockCreate, ItineraryBlockRead, ItineraryStatic
 from database import get_session, init_db
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +31,10 @@ def on_startup():
 
 @app.post("/users", response_model=UserRead)
 def create_user(user: UserCreate, session: Session = Depends(get_session)):
+    # Need to check if user already exists by username
+    existing_user = session.exec(select(User).where(user.username == User.username)).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username is already taken")
     db_user = User(**user.dict())
     session.add(db_user)
     session.commit()
@@ -74,7 +81,7 @@ def list_itineraries(
         )
     
     if creator_id is not None:
-        query = query.where(Itinerary.creator_id == creator_id)
+        query = query.where(Itinerary.user_id == creator_id)
 
     if destination is not None:
         query = query.where(Itinerary.destination == destination)
@@ -135,6 +142,11 @@ def get_static_itineraries():
             "likes": 567000,
             "forks": 4560,
             "saves": 45600,
+            "photo_urls": [
+                "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+                "https://images.unsplash.com/photo-1549693578-d683be217e58",
+            ],
+            "video_urls": ["http://localhost:8000/static/tokyo_trip.mp4"],
         },
         {
             "id": 2,
@@ -146,16 +158,27 @@ def get_static_itineraries():
             "likes": 450000,
             "forks": 4560,
             "saves": 56600,
+            "photo_urls": [
+                "https://images.unsplash.com/photo-1516637090014-cb1ab78511f5"
+            ],
+            "video_urls": [],
         },
         {
             "id": 3,
-            "title": "Antartica Edge of the World Trip",
-            "destination": "Antartica",
+            "title": "Antarctica Edge of the World Trip",
+            "destination": "Antarctica",
             "days": 17,
-            "user_name": "Stabley",
+            "user_name": "Stanley",
             "image_url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
             "likes": 1203456,
             "forks": 45600,
             "saves": 632000,
+            "photo_urls": [
+                "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+            ],
+            "video_urls": [
+                "http://localhost:8000/static/tokyo_trip.mp4"
+            ],
         },
     ]
