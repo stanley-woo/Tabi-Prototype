@@ -41,6 +41,10 @@ class ItineraryBlock(SQLModel, table=True):
 
     itinerary: Optional[Itinerary] = Relationship(back_populates="blocks")
 
+class Favorites(SQLModel, table=True):
+    user_id: int = Field(foreign_key = "user.user_id", primary_key = True)
+    itinerary_id: int = Field(foreign_key="itinerary.itinerary_id", primary_key=True)
+
 
 # ─────────────────────────────────────────────────────────────
 # Pydantic Schemas for API I/O

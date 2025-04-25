@@ -1,10 +1,12 @@
-from fastapi import FastAPI, Depends, HTTPException, Query
+from fastapi import FastAPI, Depends, HTTPException, Query, Path
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
+from typing import Optional, List
 from sqlalchemy.orm import selectinload
-from model import User, Itinerary, ItineraryBlock, UserRead, UserCreate, ItineraryCreate, ItineraryRead, ItineraryBlockCreate, ItineraryBlockRead, ItineraryStatic
+from model import User, Itinerary, ItineraryBlock, UserRead, UserCreate, ItineraryCreate, ItineraryRead, ItineraryBlockCreate, ItineraryBlockRead, ItineraryStatic, Favorites
 from database import get_session, init_db
 from fastapi.staticfiles import StaticFiles
+from rapidfuzz import fuzz
 
 app = FastAPI()
 
@@ -63,9 +65,6 @@ def create_itinerary(
     return db_itinerary
 
 
-from typing import Optional
-
-
 @app.get("/itineraries", response_model=list[ItineraryRead])
 def list_itineraries(
     skip: int = Query(0, ge=0),
@@ -103,6 +102,16 @@ def list_itineraries(
 #     query = select(Itinerary).where(Itinerary.creator_id == user_id).options(selectinload(Itinerary.blocks), selectinload(Itinerary.creator))
 #     return session.exec(query).all()
 
+
+@app.get("/users/{user_id}/favorites", response_model = List[ItineraryRead], summary = "List user's favorite itineraries")
+def get_favorites(*, user_id: int = Path(..., description="ID of the user"), session: Session = Depends(get_session)):
+    fav = (select(Itinerary).join(Favorites, Favorites.itinerary_id == Itinerary.itinerary_id).where(Favorites.user_id == user_id).options(selectinload(Itinerary.blocks), selectinload(Itinerary.creator),))
+
+    try:
+        return session.exec(fav).all()
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail=f"Favorites Error in Database: {e}")
+
 # --------------------------
 # BLOCKS
 # --------------------------
@@ -130,8 +139,11 @@ def get_blocks(itinerary_id: int, session: Session = Depends(get_session)):
 
 # For Static Flutter Now:
 @app.get("/itineraries/static", response_model=list[ItineraryStatic])
-def get_static_itineraries():
-    return [
+def get_static_itineraries(
+    search: str | None = Query(None, description="Match threshold between 0 (any match) and 100 (exact match)",
+    )
+):
+    data = [
         {
             "id": 1,
             "title": "7 Days in Tokyo",
@@ -169,7 +181,6 @@ def get_static_itineraries():
             "destination": "Bali, Indonesia",
             "days": 8,
             "user_name": "Julie",
-            "image_url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
             "likes": 450000,
             "forks": 4560,
             "saves": 56600,
@@ -199,7 +210,6 @@ def get_static_itineraries():
             "destination": "Antarctica",
             "days": 17,
             "user_name": "Stanley",
-            "image_url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
             "likes": 1203456,
             "forks": 45600,
             "saves": 632000,
@@ -223,5 +233,18 @@ def get_static_itineraries():
                 },
                 {"type": "video", "url": "http://localhost:8000/static/tokyo_trip.mp4"},
             ],
-        },
+        }
     ]
+
+    if search:
+        threshold = 60
+
+        def is_close(text: str) -> bool:
+            score = fuzz.token_set_ratio(search, text)
+            return score >= threshold
+
+        searched = [it for it in data if is_close(it["title"]) or is_close(it["destination"])]
+
+        return searched
+
+    return data
