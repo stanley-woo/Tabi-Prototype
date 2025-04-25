@@ -123,6 +123,7 @@
 
 import 'package:flutter/material.dart';
 // import 'screens/home_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/main_scaffold.dart';
 
 void main() {
@@ -137,6 +138,14 @@ class TabiApp extends StatelessWidget {
     return MaterialApp(
       title: 'Tabi',
       theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+
+        // Pinterest-style with Work Sans:
+        // textTheme: GoogleFonts.workSansTextTheme(
+        //   Theme.of(context).textTheme,
+        // ),
+
+
         useMaterial3: true,
         colorSchemeSeed: Colors.teal,
       ),

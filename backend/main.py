@@ -137,31 +137,61 @@ def get_static_itineraries():
             "title": "7 Days in Tokyo",
             "destination": "Tokyo",
             "days": 7,
-            "user_name": "Julie",
-            "image_url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+            "user_name": "Teresa",
             "likes": 567000,
             "forks": 4560,
             "saves": 45600,
-            "photo_urls": [
-                "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-                "https://images.unsplash.com/photo-1549693578-d683be217e58",
+            "blocks": [
+                {
+                    "type": "text",
+                    "content": "I guess this is it! I have had some of the best time of my life here in Japan. "
+                    "I visited Japan during November (which in my opinion is the best time to visit, "
+                    "since the Cherry Blossom season is just so busy…). The weather is very nice during "
+                    "autumn season, which is perfect for people like me, who like to walk around and do "
+                    "a lot of onsen trips.\n\n"
+                    "Here I am sharing my 9 days 8 nights itinerary, detailing what I did, what I ate, "
+                    "where I lived, and how I travelled.",
+                },
+                {
+                    "type": "photo",
+                    "url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+                },
+                {
+                    "type": "photo",
+                    "url": "https://images.unsplash.com/photo-1549693578-d683be217e58",
+                },
+                {"type": "video", "url": "http://localhost:8000/static/tokyo_trip.mp4"},
             ],
-            "video_urls": ["http://localhost:8000/static/tokyo_trip.mp4"],
         },
         {
             "id": 2,
-            "title": "Kyoto Cultural Trip",
-            "destination": "Kyoto",
-            "days": 4,
-            "user_name": "Teresa",
+            "title": "My Honeymoon In Bali (8 Days 7 Nights)",
+            "destination": "Bali, Indonesia",
+            "days": 8,
+            "user_name": "Julie",
             "image_url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
             "likes": 450000,
             "forks": 4560,
             "saves": 56600,
-            "photo_urls": [
-                "https://images.unsplash.com/photo-1516637090014-cb1ab78511f5"
+            "blocks": [
+                {
+                    "type": "text",
+                    "content": "My honeymoon in Bali was an absolute dream! Over eight days and sevel nights, JC and I soaked up the sunshine, "
+                    "explored hidden temples, and indulged in local cuisine. "
+                    "We started our adventure in Seminyak, wandering through vibrant street markets and sampling fresh coconut ice cream and spicy satay skewers. "
+                    "In Ubud, we hiked the terraced rice fields at sunrise, practiced yoga overlooking lush green valleys, and attended an enchanting traditional Balinese dance performance. "
+                    "On the east coast, we relaxed in natural hot springs beneath Mount Agung and snorkelled off Nusa Penida, marveling at colorful coral reefs and graceful manta rays.\n\nBetween adventures, we unwound with couples’ massages at a beachfront spa, strolled along Jimbaran Bay under starlit skies, and watched mesmerizing fire dancers swirl on the sand.\n\n"
+                    "Each evening, we savored grilled ikan bakar and passionfruit cocktails at cliffside cafés, the sound of the waves forming the perfect soundtrack. Whether chasing hidden waterfalls, sharing late-night laughter over nasi campur, or simply gazing at the sunset, every moment felt utterly magical—and memories we’ll cherish for a lifetime.",
+                },
+                {
+                    "type": "photo",
+                    "url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+                },
+                {
+                    "type": "photo",
+                    "url": "https://images.unsplash.com/photo-1549693578-d683be217e58",
+                },
             ],
-            "video_urls": [],
         },
         {
             "id": 3,
@@ -173,12 +203,25 @@ def get_static_itineraries():
             "likes": 1203456,
             "forks": 45600,
             "saves": 632000,
-            "photo_urls": [
-                "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
-                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-            ],
-            "video_urls": [
-                "http://localhost:8000/static/tokyo_trip.mp4"
+            "blocks": [
+                {
+                    "type": "text",
+                    "content": "My honeymoon in Bali was an absolute dream! Over eight days and sevel nights, JC and I soaked up the sunshine, "
+                    "explored hidden temples, and indulged in local cuisine. "
+                    "We started our adventure in Seminyak, wandering through vibrant street markets and sampling fresh coconut ice cream and spicy satay skewers. "
+                    "In Ubud, we hiked the terraced rice fields at sunrise, practiced yoga overlooking lush green valleys, and attended an enchanting traditional Balinese dance performance. "
+                    "On the east coast, we relaxed in natural hot springs beneath Mount Agung and snorkelled off Nusa Penida, marveling at colorful coral reefs and graceful manta rays.\n\nBetween adventures, we unwound with couples’ massages at a beachfront spa, strolled along Jimbaran Bay under starlit skies, and watched mesmerizing fire dancers swirl on the sand.\n\n"
+                    "Each evening, we savored grilled ikan bakar and passionfruit cocktails at cliffside cafés, the sound of the waves forming the perfect soundtrack. Whether chasing hidden waterfalls, sharing late-night laughter over nasi campur, or simply gazing at the sunset, every moment felt utterly magical—and memories we’ll cherish for a lifetime.",
+                },
+                {
+                    "type": "photo",
+                    "url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+                },
+                {
+                    "type": "photo",
+                    "url": "https://images.unsplash.com/photo-1549693578-d683be217e58",
+                },
+                {"type": "video", "url": "http://localhost:8000/static/tokyo_trip.mp4"},
             ],
         },
     ]

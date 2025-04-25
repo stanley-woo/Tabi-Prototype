@@ -46,6 +46,9 @@ class _HomePageState extends State<HomePage> {
               final itinerary = itineraries[index];
               final isSaved = savedItineraryIds.contains(itinerary.id);
 
+              final photoBlocks = itinerary.blocks.whereType<PhotoBlock>();
+              final heroUrl = photoBlocks.isNotEmpty ? photoBlocks.first.url : null;
+
               return InkWell(
                 onTap: () {
                   Navigator.push(
@@ -66,19 +69,22 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius:
-                            const BorderRadius.vertical(top: Radius.circular(16)),
-                        child: Image.network(
-                          itinerary.imageUrl,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            height: 200,
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.image),
-                          ),
-                        ),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        child: heroUrl != null
+                            ? Image.network(
+                                heroUrl,
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (ctx, err, st) =>
+                                    Container(height: 200, color: Colors.grey[300], child: const Icon(Icons.broken_image)),
+                                )
+                            : Container(
+                                height: 200,
+                                width: double.infinity,
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.image),
+                                ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),

@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from typing import Optional, List, Literal, Union
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -104,6 +104,20 @@ class ItineraryBlockRead(BaseModel):
 # Static Data Model for Flutter (non-DB)
 # ─────────────────────────────────────────────────────────────
 
+class TextBlock(BaseModel):
+    type: Literal["text"]
+    content: str
+
+class PhotoBlock(BaseModel):
+    type: Literal["photo"]
+    url: str
+
+class VideoBlock(BaseModel):
+    type: Literal["video"]
+    url: str
+
+Block = Union[TextBlock, PhotoBlock, VideoBlock]
+
 
 class ItineraryStatic(BaseModel):
     id: int
@@ -111,10 +125,7 @@ class ItineraryStatic(BaseModel):
     destination: str
     days: int
     user_name: str
-
-    image_url: str
     likes: int
     forks: int
     saves: int
-    photo_urls: List[str] = []
-    video_urls: List[str] = []
+    blocks: list[Block]
