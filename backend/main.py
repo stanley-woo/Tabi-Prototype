@@ -172,7 +172,6 @@ def get_static_itineraries(
                     "type": "photo",
                     "url": "https://images.unsplash.com/photo-1549693578-d683be217e58",
                 },
-                {"type": "video", "url": "http://localhost:8000/static/tokyo_trip.mp4"},
             ],
         },
         {
@@ -231,7 +230,6 @@ def get_static_itineraries(
                     "type": "photo",
                     "url": "https://images.unsplash.com/photo-1549693578-d683be217e58",
                 },
-                {"type": "video", "url": "http://localhost:8000/static/tokyo_trip.mp4"},
             ],
         }
     ]

@@ -1,93 +1,120 @@
 import 'package:flutter/material.dart';
+import '../data/profile_data.dart';
 import '../models/itinerary.dart';
-import '../services/api_service.dart';
 import 'itinerary_detail_page.dart';
 
-class ProfilePage extends StatefulWidget {
-  final int userID;
-  const ProfilePage({super.key, required this.userID});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  late Future<List<ItineraryStatic>> _myItins;
-  late Future<List<ItineraryStatic>> _myFavs;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    _myItins = ApiService.fetchItineraries();
-    _myFavs = ApiService.fetchFavorites(widget.userID);
+  Widget _buildStat(String label, Object count) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          count.toString(),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(fontSize: 12)),
+      ],
+    );
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildList(Future<List<ItineraryStatic>> future) {
-    return FutureBuilder<List<ItineraryStatic>>(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final list = snapshot.data ?? [];
-        if (list.isEmpty) {
-          return const Center(child: Text("So Sally Can Wait~"));
-        }
-
-        return ListView(
-          children:
-              list.map((it) {
-                return ListTile(
-                  contentPadding: const EdgeInsets.all(16),
-                  title: Text(it.title),
-                  subtitle: Text("${it.destination} • ${it.days} days"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ItineraryDetailPage(itinerary: it),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-        );
-      },
+  Widget _buildProfileHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      child: Column(
+        children: [
+          const CircleAvatar(
+            radius: 48,
+            backgroundImage: NetworkImage('https://picsum.photos/200'),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            currentUserName,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildStat("Places Visited", placesVisitedCount),
+              _buildStat("Followers", followersCount),
+              _buildStat("Itineraries", myItineraries.length),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Profile"),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.grid_on), text: "My Trips"),
-            Tab(icon: Icon(Icons.bookmark), text: "Saved"),
-            Tab(icon: Icon(Icons.collections), text: "Collections"),
+    return DefaultTabController(
+      length: 3, // Posts, Saved, Forked
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          centerTitle: true,
+          title: const Text('Profile', style: TextStyle(color: Colors.black)),
+          bottom: const TabBar(
+            indicatorColor: Colors.black,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            tabs: [Tab(text: 'Posts'), Tab(text: 'Saved'), Tab(text: 'Forked')],
+          ),
+        ),
+        body: Column(
+          children: [
+            _buildProfileHeader(),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _ItineraryListView(itins: myItineraries),
+                  _ItineraryListView(itins: myFavorites),
+                  _ItineraryListView(itins: myForks),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildList(_myItins),
-          _buildList(_myFavs),
-          const Center(child: Text("So Sally Can't Wait~")),
-        ],
-      ),
+    );
+  }
+}
+
+class _ItineraryListView extends StatelessWidget {
+  final List<ItineraryStatic> itins;
+  const _ItineraryListView({Key? key, required this.itins}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (itins.isEmpty) {
+      return const Center(child: Text('Nothing to show here.'));
+    }
+
+    return ListView.builder(
+      itemCount: itins.length,
+      itemBuilder: (context, index) {
+        final itin = itins[index];
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 8,
+            horizontal: 16,
+          ),
+          title: Text(itin.title),
+          subtitle: Text('${itin.destination} • ${itin.days} days'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ItineraryDetailPage(itinerary: itin),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
