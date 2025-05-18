@@ -144,8 +144,6 @@ class TabiApp extends StatelessWidget {
         // textTheme: GoogleFonts.workSansTextTheme(
         //   Theme.of(context).textTheme,
         // ),
-
-
         useMaterial3: true,
         colorSchemeSeed: Colors.teal,
       ),
